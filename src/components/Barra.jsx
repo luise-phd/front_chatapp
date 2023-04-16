@@ -1,25 +1,38 @@
-import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
-import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Offcanvas from "react-bootstrap/Offcanvas";
 
 import React, { useState, useEffect } from "react";
+import Axios from "axios";
 
 export default function Barra() {
   const [show, setShow] = useState(true);
-  // const [opcionRegistro, setOpcionRegistro] = useState(false);
   const [menu, setMenu] = useState(false);
+  const [opcionNuevo, setOpcionNuevo] = useState(false);
+  const [opcionEditar, setOpcionEditar] = useState(false);
+
+  const [admin, setAdmin] = useState("");
+  
+  const obtenerPrivilegiosUsuario = async() => {
+    const id = sessionStorage.getItem("idUsuario");
+    const token = sessionStorage.getItem("token");
+    const respuesta = await Axios.get("/usuario/buscar/" + id, {
+      headers: { autorizacion: token },
+    });
+    setAdmin(respuesta.data.admin)
+    setOpcionNuevo(respuesta.data.admin === "Si")
+    setOpcionEditar(respuesta.data.admin === "Si")
+  };
 
   useEffect(() => {
+    obtenerPrivilegiosUsuario();
     if (sessionStorage.getItem("token")) {
       setMenu(true);
       setShow(false);
-      // setOpcionRegistro(true);
     }
-  }, []);
+  }, [admin]);
 
   const salir = () => {
     sessionStorage.clear();
@@ -32,20 +45,10 @@ export default function Barra() {
         <Container fluid>
           <Navbar.Toggle aria-controls="offcanvasNavbar" />
           <Navbar.Brand hidden={show} href="#">
-            <i class="fas fa-user-tie"></i> Bienvenido: {sessionStorage.getItem('nombre')}
+            <i class="fas fa-user-tie"></i> {sessionStorage.getItem("nombre")}
           </Navbar.Brand>
-          {/* <Navbar.Brand href="#"></Navbar.Brand>
-          <Navbar.Brand href="#"></Navbar.Brand>
-          <Navbar.Brand
-            hidden={show}
-            style={{ color: "#FFF", textDecoration: "none" }}
-            href="/registrarUsuario"
-          >
-            <i className="fas fa-user-plus"></i>
-            <Navbar.Brand>Registrarse</Navbar.Brand>
-            </Navbar.Brand> */}
           <Navbar.Brand hidden={show} href="#" onClick={() => salir()} to="/">
-            <i class="fas fa-user-times"></i> Cerrar sesión
+            <i class="fas fa-user-times"></i>
           </Navbar.Brand>
           <Navbar.Offcanvas
             id="offcanvasNavbar"
@@ -61,47 +64,27 @@ export default function Barra() {
               <Nav className="justify-content-end flex-grow-1 pe-3">
                 <NavDropdown
                   hidden={show}
-                  title="Registros"
+                  title="Usuarios"
                   id="offcanvasNavbarDropdown"
                 >
-                  <NavDropdown.Item href="/registrarUsuario">
-                    <i class="fas fa-user-plus"></i> Registrar usuario
+                  <NavDropdown.Item href="/registrarUsuario" hidden={!opcionNuevo}>
+                    <i class="fas fa-user-plus"></i> Nuevo
                   </NavDropdown.Item>
-                  {/* <NavDropdown.Item href="/registrarUsuario">
-                    Registrar Usuario
-                  </NavDropdown.Item> */}
-                </NavDropdown>
-
-                <NavDropdown
-                  hidden={show}
-                  title="Reportes"
-                  id="offcanvasNavbarDropdown"
-                >
+                  <NavDropdown.Item href="/editarUsuarios" hidden={!opcionEditar}>
+                    <i class="fas fa-clipboard"></i> Editar
+                  </NavDropdown.Item>
                   <NavDropdown.Item href="/verUsuarios">
-                    <i class="fas fa-clipboard"></i> Ver usuarios
+                    <i class="fas fa-message"></i> Mensajes
                   </NavDropdown.Item>
-                  {/* <NavDropdown.Item href="/verCiudades">
-                    Ver ciudades
+                  {/* <NavDropdown.Item href="/verUsuarios">
+                    <i class="fas fa-key"></i> Cambiar contraseña
                   </NavDropdown.Item> */}
                 </NavDropdown>
               </Nav>
-              <Form className="d-flex">
-                <Form.Control
-                  hidden={show}
-                  type="search"
-                  placeholder="Search"
-                  className="me-2"
-                  aria-label="Search"
-                />
-                <Button hidden={show} variant="outline-success">
-                  Search
-                </Button>
-              </Form>
             </Offcanvas.Body>
           </Navbar.Offcanvas>
         </Container>
       </Navbar>
-      <br />
     </>
   );
 }

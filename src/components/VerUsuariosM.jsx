@@ -158,7 +158,7 @@ export default function VerUsuarios() {
 
   return (
     <div className="container" align="center">
-      <div style={{ height: 400, width: "80%" }}>
+      <div style={{ height: 400, width: "100%" }}>
         <DataGrid
           rows={data}
           columns={columns}

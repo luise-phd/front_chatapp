@@ -50,7 +50,7 @@ export default function SignIn() {
         showConfirmButton: false,
         timer: 1500
       })
-      window.location.href = '/index'
+      window.location.href = '/VerUsuarios'
     }
   }
 

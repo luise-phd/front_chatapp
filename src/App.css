@@ -36,3 +36,12 @@
     transform: rotate(360deg);
   }
 }
+
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: url('https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-ios7-arrow-down-512.png') no-repeat right center;
+  background-size: 20px;
+  padding-right: 25px;
+}
