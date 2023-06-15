@@ -51,11 +51,6 @@ export default function SelectedListItem() {
     // Reproducir el sonido de notificación
     const audio = new Audio(notificationSound);
     audio.play();
-
-    // Se necesita recargar la página para que actualice los mensajes sin leer de cada usuario
-    setTimeout(() => {
-      window.location.reload();
-    }, 610000);
     
     // Solicitar permiso al usuario para mostrar notificaciones
     Notification.requestPermission().then(permission => {
@@ -64,6 +59,11 @@ export default function SelectedListItem() {
         new Notification("Tienes nuevos mensajes!");
       }
     });
+
+    // Se necesita recargar la página para que actualice los mensajes sin leer de cada usuario
+    setTimeout(() => {
+      window.location.reload();
+    }, 610000);
   };
 
   const totalMensajesSinLeer = usuarios.reduce(
