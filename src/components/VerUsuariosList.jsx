@@ -71,23 +71,21 @@ export default function SelectedListItem() {
   );
 
   useEffect(() => {
-    setTimeout(() => {
-      if (totalMensajesSinLeer > 0) {
-        Swal.fire({
-          icon: "success",
-          title: totalMensajesSinLeer === 1 ? `Tienes ${totalMensajesSinLeer} mensaje sin leer!` : `Tienes ${totalMensajesSinLeer} mensajes sin leer!`,
-          showConfirmButton: true,
-          preConfirm: () => setNewMessages(true),
-        });
-      } else {
-        Swal.fire({
-          icon: "success",
-          title: "No tienes mensaje nuevos!",
-          showConfirmButton: true,
-          preConfirm: () => setNewMessages(true),
-        });
-      }
-    }, 5000);
+    if (totalMensajesSinLeer > 0) {
+      Swal.fire({
+        icon: "success",
+        title: totalMensajesSinLeer === 1 ? `Tienes ${totalMensajesSinLeer} mensaje sin leer!` : `Tienes ${totalMensajesSinLeer} mensajes sin leer!`,
+        showConfirmButton: true,
+        preConfirm: () => setNewMessages(true),
+      });
+    } else {
+      Swal.fire({
+        icon: "success",
+        title: "No tienes mensaje nuevos!",
+        showConfirmButton: true,
+        preConfirm: () => setNewMessages(true),
+      });
+    }
   }, [totalMensajesSinLeer]);
 
   useEffect(() => {
