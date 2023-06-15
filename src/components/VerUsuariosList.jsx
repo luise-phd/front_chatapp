@@ -52,9 +52,10 @@ export default function SelectedListItem() {
     const audio = new Audio(notificationSound);
     audio.play();
 
+    // Se necesita recargar la página para que actualice los mensajes sin leer de cada usuario
     setTimeout(() => {
       window.location.reload();
-    }, 5000);
+    }, 70000);
     
     // Solicitar permiso al usuario para mostrar notificaciones
     // Notification.requestPermission().then(permission => {
@@ -78,13 +79,6 @@ export default function SelectedListItem() {
         showConfirmButton: true,
         preConfirm: () => setNewMessages(true),
       });
-    } else {
-      Swal.fire({
-        icon: "success",
-        title: "No tienes mensaje nuevos!",
-        showConfirmButton: true,
-        preConfirm: () => setNewMessages(true),
-      });
     }
   }, [totalMensajesSinLeer]);
 
@@ -92,10 +86,19 @@ export default function SelectedListItem() {
     obtenerUsuarios();
 
     const intervalId = setInterval(() => {
+      console.log(totalMensajesSinLeer)
+      if (totalMensajesSinLeer === 0) {
+        Swal.fire({
+          icon: "success",
+          title: "No tienes mensaje nuevos!",
+          showConfirmButton: true,
+          preConfirm: () => setNewMessages(true),
+        });
+      }
       if (newMessages) {
         reproducirAudio();
       }
-    }, 25000);
+    }, 20000);
 
     return () => clearInterval(intervalId);
   }, [newMessages, totalMensajesSinLeer]);
