@@ -55,7 +55,7 @@ export default function SelectedListItem() {
     // Se necesita recargar la página para que actualice los mensajes sin leer de cada usuario
     setTimeout(() => {
       window.location.reload();
-    }, 70000);
+    }, 610000);
     
     // Solicitar permiso al usuario para mostrar notificaciones
     // Notification.requestPermission().then(permission => {
