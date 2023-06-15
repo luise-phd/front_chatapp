@@ -54,7 +54,7 @@ export default function SelectedListItem() {
 
     setTimeout(() => {
       window.location.reload();
-    }, 3000);
+    }, 5000);
     
     // Solicitar permiso al usuario para mostrar notificaciones
     // Notification.requestPermission().then(permission => {
@@ -71,21 +71,23 @@ export default function SelectedListItem() {
   );
 
   useEffect(() => {
-    if (totalMensajesSinLeer > 0) {
-      Swal.fire({
-        icon: "success",
-        title: totalMensajesSinLeer === 1 ? `Tienes ${totalMensajesSinLeer} mensaje sin leer!` : `Tienes ${totalMensajesSinLeer} mensajes sin leer!`,
-        showConfirmButton: true,
-        preConfirm: () => setNewMessages(true),
-      });
-    } else {
-      Swal.fire({
-        icon: "success",
-        title: "No tienes mensaje nuevos!",
-        showConfirmButton: true,
-        preConfirm: () => setNewMessages(true),
-      });
-    }
+    setTimeout(() => {
+      if (totalMensajesSinLeer > 0) {
+        Swal.fire({
+          icon: "success",
+          title: totalMensajesSinLeer === 1 ? `Tienes ${totalMensajesSinLeer} mensaje sin leer!` : `Tienes ${totalMensajesSinLeer} mensajes sin leer!`,
+          showConfirmButton: true,
+          preConfirm: () => setNewMessages(true),
+        });
+      } else {
+        Swal.fire({
+          icon: "success",
+          title: "No tienes mensaje nuevos!",
+          showConfirmButton: true,
+          preConfirm: () => setNewMessages(true),
+        });
+      }
+    }, 5000);
   }, [totalMensajesSinLeer]);
 
   useEffect(() => {
@@ -95,7 +97,7 @@ export default function SelectedListItem() {
       if (newMessages) {
         reproducirAudio();
       }
-    }, 5000);
+    }, 25000);
 
     return () => clearInterval(intervalId);
   }, [newMessages, totalMensajesSinLeer]);
