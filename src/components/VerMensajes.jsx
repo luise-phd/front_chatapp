@@ -6,6 +6,8 @@ import SendIcon from "@mui/icons-material/Send";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 
+// import notificationSound from '../media/SD_ALERT_3.mp3';
+
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useParams } from "react-router-dom";
 
@@ -17,10 +19,12 @@ export default function EnviarMensaje() {
   const [msg, setMsg] = useState("");
   const [mensajes, setMensajes] = useState([]);
 
+  const [edicionRealizada, setEdicionRealizada] = useState(false);
+
   const listRef = useRef(null);
 
   const { telOrigen, telDestino } = useParams();
-  // console.log(telOrigen, telDestino);  
+  // console.log(telOrigen, telDestino);
 
   const obtenerMensajes = useCallback(async () => {
     // const id = sessionStorage.getItem("idUsuario");
@@ -29,8 +33,35 @@ export default function EnviarMensaje() {
       headers: { autorizacion: token },
     });
     setMensajes(respuesta.data);
+
+    // Obtener los IDs de los mensajes para editar el estado
+    // const mensajeIds = respuesta.data.map((mensaje) => mensaje._id);
+    // console.log(mensajeIds)
+
+    // Editar los estados de los mensajes a 1
+    // await Axios.post("/mensaje/editarEstado", { mensajeIds }, {
+    //   headers: { autorizacion: token },
+    // });
+
     listRef.current?.lastElementChild?.scrollIntoView({ behavior: "smooth" });
     
+  }, [telOrigen, telDestino]);
+
+  const editarEstadosMensajes = useCallback(async () => {
+    const token = sessionStorage.getItem("token");
+    const respuesta = await Axios.get("/mensaje/listar/"+ telOrigen + "/" + telDestino, {
+      headers: { autorizacion: token },
+    });
+    setMensajes(respuesta.data);
+
+    // Obtener los IDs de los mensajes para editar el estado
+    const mensajeIds = respuesta.data.map((mensaje) => mensaje._id);
+
+    await Axios.post("/mensaje/editarEstado/"+ telOrigen + "/" + telDestino, { mensajeIds }, {
+      headers: { autorizacion: token },
+    });
+
+    setEdicionRealizada(true);
   }, [telOrigen, telDestino]);
 
   const enviar = async (e) => {
@@ -63,15 +94,54 @@ export default function EnviarMensaje() {
   //   obtenerMensajes();
   // }, [obtenerMensajes]);
 
+  // useEffect(() => {
+  //   obtenerMensajes();
+
+  //   const intervalId = setInterval(() => {
+  //     obtenerMensajes();
+  //   }, 1000); // hacer una solicitud cada segundo
+
+  //   return () => clearInterval(intervalId);
+  // }, [obtenerMensajes]);
+
   useEffect(() => {
     obtenerMensajes();
+  }, [obtenerMensajes]);
+
+  useEffect(() => {
+    if (!edicionRealizada) {
+      editarEstadosMensajes();
+    }
 
     const intervalId = setInterval(() => {
       obtenerMensajes();
-    }, 1000); // hacer una solicitud cada segundo
+    }, 1000);
 
     return () => clearInterval(intervalId);
-  }, [obtenerMensajes]);
+  }, [obtenerMensajes, editarEstadosMensajes, edicionRealizada]);
+
+  /*const handleClick = () => {
+    // Verificar si el navegador admite notificaciones
+    if (!("Notification" in window)) {
+      console.log("Este navegador no admite notificaciones.");
+      return;
+    }
+
+    const audio = new Audio(notificationSound);
+    audio.play();
+
+    // Solicitar permiso al usuario para mostrar notificaciones
+    Notification.requestPermission().then(permission => {
+      if (permission === "granted") {
+        // Crear y mostrar la notificación
+        new Notification("Tienes nuevos mensajes!");
+
+        // Reproducir el sonido de notificación
+        // const audio = new Audio(notificationSound);
+        // audio.play();
+      }
+    });
+  }*/
   
   return (
     <div className="container" align="center">
@@ -127,6 +197,7 @@ export default function EnviarMensaje() {
           }}
           onClick={enviar}
         />
+        {/* <Button onClick={handleClick}>Lanzar notificación</Button> */}
       </div>
     </div>
   );

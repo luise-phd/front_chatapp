@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Barra from "./components/Barra";
 import RegistrarUsuario from './components/RegistrarUsuario';
 import VerUsuariosList from './components/VerUsuariosList';
-import EditarUsuarios from './components/VerUsuariosM';
+import EditarUsuarios from './components/EditarUsuariosM';
 import VerMensajes from './components/VerMensajes';
 import Login from "./components/LoginM";
 import Index from "./components/index";
