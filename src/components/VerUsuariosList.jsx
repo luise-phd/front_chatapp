@@ -58,12 +58,12 @@ export default function SelectedListItem() {
     }, 610000);
     
     // Solicitar permiso al usuario para mostrar notificaciones
-    // Notification.requestPermission().then(permission => {
-    //   if (permission === "granted") {
-    //     // Crear y mostrar la notificación
-    //     new Notification("Tienes nuevos mensajes!");
-    //   }
-    // });
+    Notification.requestPermission().then(permission => {
+      if (permission === "granted") {
+        // Crear y mostrar la notificación
+        new Notification("Tienes nuevos mensajes!");
+      }
+    });
   };
 
   const totalMensajesSinLeer = usuarios.reduce(
@@ -87,14 +87,14 @@ export default function SelectedListItem() {
 
     const intervalId = setInterval(() => {
       console.log(totalMensajesSinLeer)
-      if (totalMensajesSinLeer === 0) {
+      /*if (totalMensajesSinLeer === 0) {
         Swal.fire({
           icon: "success",
           title: "No tienes mensaje nuevos!",
           showConfirmButton: true,
           preConfirm: () => setNewMessages(true),
         });
-      }
+      }*/
       if (newMessages) {
         reproducirAudio();
       }
